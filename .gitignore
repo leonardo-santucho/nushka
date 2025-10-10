@@ -1,0 +1,24 @@
+# dependencias / builds
+node_modules/
+.next/
+out/
+dist/
+.vercel/
+coverage/
+.vscode/
+
+# SO / IDE
+.DS_Store
+*.log
+
+# envs
+.env
+.env.local
+.env.*.local
+
+# si NO usás pnpm, ignoralo
+pnpm-lock.yaml
+
+# opcional: caches diversas
+.npm/
+.cache/

@@ -51,12 +51,14 @@ export default function Hero() {
       <Header />
       <motion.div ref={container} style={{ y }} className="relative h-full isolate">
         <Image
-          src="/images/portada-pistacho-01.jpg"
-          fill
+          src="/images/portada-pistacho-01.webp"
           alt="Nuska · Plantación de pistachos"
-          className="object-cover"
+          fill
           priority
+          quality={70} // 👈 reduce el peso en tiempo de build
+          className="object-cover"
         />
+
 
         <div className="absolute inset-0 bg-black/40" aria-hidden />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent" aria-hidden />

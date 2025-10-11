@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useScroll, useTransform, motion } from "framer-motion"
 import { useRef, useCallback } from "react"
 import Header from "./header"
+import heroImg from "@/public/images/portada-pistacho-01.webp" // import estático (optimiza mejor)
 
 export default function Hero() {
   const container = useRef<HTMLDivElement | null>(null)
@@ -13,35 +14,19 @@ export default function Hero() {
     target: container,
     offset: ["start start", "end start"],
   })
-
   const y = useTransform(scrollYProgress, [0, 1], [0, 150])
 
   const wappPhone = "5492615266151"
   const wappMsg = encodeURIComponent("Hola Nushka, quiero hacer un pedido de pistachos. ¿Me ayudan?")
   const wappHref = `https://wa.me/${wappPhone}?text=${wappMsg}`
 
-  // 👉 Click del CTA: usa Lenis/Loco si están; si no, nativo con smooth.
   const onAnchorClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
     const target = document.querySelector("#beneficios")
     if (!target) return
-
-    // Lenis
     const lenis: any = (window as any)?.lenis
-    if (lenis?.scrollTo) {
-      e.preventDefault()
-      lenis.scrollTo(target, { offset: 0 })
-      return
-    }
-
-    // LocomotiveScroll (distintas integraciones)
+    if (lenis?.scrollTo) { e.preventDefault(); lenis.scrollTo(target, { offset: 0 }); return }
     const loco: any = (window as any)?.locoScroll || (window as any)?.locomotive
-    if (loco?.scrollTo) {
-      e.preventDefault()
-      loco.scrollTo(target, { offset: 0, duration: 800, easing: [0.25, 0.0, 0.35, 1.0] })
-      return
-    }
-
-    // Fallback nativo: suave SOLO en este click (no global)
+    if (loco?.scrollTo) { e.preventDefault(); loco.scrollTo(target, { offset: 0, duration: 800, easing: [0.25, 0, 0.35, 1] }); return }
     e.preventDefault()
     ;(target as HTMLElement).scrollIntoView({ behavior: "smooth", block: "start" })
   }, [])
@@ -49,20 +34,38 @@ export default function Hero() {
   return (
     <div className="h-screen overflow-hidden">
       <Header />
-      <motion.div ref={container} style={{ y }} className="relative h-full isolate">
+      <motion.div
+        ref={container}
+        style={{ y }}
+        className="relative h-full isolate"
+      >
+        {/* Fondo tiny y color base para que nunca se vea gris */}
+        <div
+          className="absolute inset-0 bg-center bg-cover"
+          style={{
+            backgroundColor: "#6b675c", // tono madera para evitar flash
+            backgroundImage: "url(/images/portada-pistacho-01-tiny.webp)", // ~2–4KB
+          }}
+          aria-hidden
+        />
+
+        {/* Imagen principal, sin blur ni transiciones */}
         <Image
-          src="/images/portada-pistacho-01.webp"
+          src={heroImg}          // import estático
           alt="Nuska · Plantación de pistachos"
           fill
           priority
-          quality={70} // 👈 reduce el peso en tiempo de build
+          loading="eager"
+          sizes="100vw"
+          quality={72}
           className="object-cover"
         />
 
-
+        {/* Overlay constante */}
         <div className="absolute inset-0 bg-black/40" aria-hidden />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent" aria-hidden />
 
+        {/* Contenido */}
         <div className="absolute inset-0 z-10 flex items-center">
           <div className="px-6 md:px-10 lg:px-16 max-w-3xl text-white">
             <span className="mb-3 inline-block text-[11px] tracking-[0.18em] uppercase opacity-90">
@@ -75,11 +78,10 @@ export default function Hero() {
 
             <p className="mt-5 text-base md:text-xl leading-relaxed md:leading-8 opacity-95 max-w-2xl">
               En Nushka cultivamos pistachos con prácticas responsables, combinando tradición y tecnología
-              para lograr sabor, textura y calidad superiores. Del campo a tu mesa!
+              para lograr sabor, textura y calidad superiores. ¡Del campo a tu mesa!
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              {/* CTA → usa onAnchorClick */}
               <a
                 href="#beneficios"
                 onClick={onAnchorClick}

@@ -47,7 +47,7 @@ export default function Footer() {
                   className="text-white hover:text-neutral-400 transition-colors duration-300 text-sm sm:text-base"
                   aria-label="Encontranos en LinkedIn"
                 >
-                  Encontranos en LinkedIn
+                  Buscanos en LinkedIn
                 </a>
               </div>
             </div>

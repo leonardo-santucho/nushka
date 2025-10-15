@@ -35,12 +35,13 @@ export default function Section() {
       </div>
 
       <h3 className="absolute top-12 right-6 text-white uppercase z-10 text-sm md:text-base lg:text-lg">
-        Nuestra finca "La Cristina" en Mendoza
+        Natural, auténtico y con origen
       </h3>
 
       <p className="absolute bottom-12 right-6 text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-5xl z-10">
-        Entre el sol de los Andes y los vientos frescos de la cordillera, crecen los pistachos Nushka.
-        Cuidamos cada árbol con respeto por la tierra y pasión por lo natural.
+        NUSHKA nació en Finca La Cristina, un emprendimiento familiar con más de 25 años de historia en Mendoza.
+        En nuestras tierras cultivamos viña, olivo y pistacho, combinando tradición, trabajo y pasión por la naturaleza.
+        Lo que comenzó como un sueño familiar hoy crece con el propósito de llevar a cada mesa un pedacito de ese esfuerzo mendocino.
       </p>
     </div>
   )

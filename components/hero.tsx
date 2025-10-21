@@ -5,7 +5,9 @@ import Image from "next/image"
 import { useScroll, useTransform, motion } from "framer-motion"
 import { useRef, useCallback } from "react"
 import Header from "./header"
-import heroImg from "@/public/images/portada-pistacho-01.webp" // import estático (optimiza mejor)
+import heroImg from "@/public/images/portada-pistacho-01.webp"
+// 👇 importa el helper para disparar eventos GA4
+import { gaEvent } from "@/lib/gtag"
 
 export default function Hero() {
   const container = useRef<HTMLDivElement | null>(null)
@@ -34,24 +36,18 @@ export default function Hero() {
   return (
     <div className="h-screen overflow-hidden">
       <Header />
-      <motion.div
-        ref={container}
-        style={{ y }}
-        className="relative h-full isolate"
-      >
-        {/* Fondo tiny y color base para que nunca se vea gris */}
+      <motion.div ref={container} style={{ y }} className="relative h-full isolate">
         <div
           className="absolute inset-0 bg-center bg-cover"
           style={{
-            backgroundColor: "#6b675c", // tono madera para evitar flash
-            backgroundImage: "url(/images/portada-pistacho-01-tiny.webp)", // ~2–4KB
+            backgroundColor: "#6b675c",
+            backgroundImage: "url(/images/portada-pistacho-01-tiny.webp)",
           }}
           aria-hidden
         />
 
-        {/* Imagen principal, sin blur ni transiciones */}
         <Image
-          src={heroImg}          // import estático
+          src={heroImg}
           alt="Nuska · Plantación de pistachos"
           fill
           priority
@@ -61,11 +57,9 @@ export default function Hero() {
           className="object-cover"
         />
 
-        {/* Overlay constante */}
         <div className="absolute inset-0 bg-black/40" aria-hidden />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent" aria-hidden />
 
-        {/* Contenido */}
         <div className="absolute inset-0 z-10 flex items-center">
           <div className="px-6 md:px-10 lg:px-16 max-w-3xl text-white">
             <span className="mb-3 inline-block text-[11px] tracking-[0.18em] uppercase opacity-90">
@@ -78,8 +72,9 @@ export default function Hero() {
 
             <p className="mt-5 text-base md:text-xl leading-relaxed md:leading-8 opacity-95 max-w-2xl">
               NUSHKA es el resultado de años de trabajo, ilusión y compromiso familiar.
-              Desde Mendoza cultivamos y elaboramos pistachos con dedicación, cuidando cada detalle para que en cada paquete llegue un pedacito de nuestra historia y del amor por lo que hacemos.            
+              Desde Mendoza cultivamos y elaboramos pistachos con dedicación, cuidando cada detalle para que en cada paquete llegue un pedacito de nuestra historia y del amor por lo que hacemos.
             </p>
+
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
                 href="#beneficios"
@@ -94,17 +89,23 @@ export default function Hero() {
               </a>
 
               <a
+                id="cta-wapp-hero"
                 href={wappHref}
                 target="_blank"
                 rel="noopener noreferrer"
+                // 👇 Dispara evento GA4 al click
+                onClick={() =>
+                  gaEvent("click_whatsapp", {
+                    location: "hero",
+                    label: "Hace tu pedido",
+                    phone: wappPhone,
+                    transport_type: "beacon", // ayuda a enviar el hit aunque abra nueva pestaña
+                  })
+                }
                 className="inline-flex items-center gap-2 rounded-none bg-white px-4 py-2 text-sm font-semibold uppercase tracking-wider text-emerald-700 shadow-sm ring-1 ring-emerald-600/30 transition hover:shadow-md hover:ring-emerald-600/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 aria-label="Hacé tu pedido por WhatsApp"
               >
                 Hacé tu pedido
-                {/* <svg width="16" height="16" viewBox="0 0 32 32" fill="none" aria-hidden>
-                  <path d="M19.6 17.3c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1-.2.2-.7.8-.9 1-.2.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1-.6-.6-1-1.3-1.1-1.5-.1-.2 0-.3.1-.4.1-.1.2-.3.3-.4.1-.1.1-.2.2-.3.1-.1 0-.2 0-.3 0-.1-.6-1.5-.8-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 3.8 3.5 2.3 1 2.3.7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.1-.1-.2-.2-.4-.3Z" fill="currentColor"/>
-                  <path d="M16 3a13 13 0 0 0-11 19.9L4 29l6.3-1.7A13 13 0 1 0 16 3Zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-3.7 1 1-3.6-.2-.4A11 11 0 1 1 16 27Z" fill="currentColor"/>
-                </svg> */}
               </a>
             </div>
           </div>
